@@ -12,14 +12,14 @@ helm upgrade -i flux fluxcd/flux \
     --set git.branch=main \
     --namespace flux
 
-kubectl wait -n flux --for=condition=ready pod --all
+kubectl wait -n flux --for=condition=ready pod --all --timeout -1
 
 helm upgrade -i helm-operator fluxcd/helm-operator \
     --set helm.versions=v3 \
     --set git.ssh.secretName=flux-git-deploy \
     --namespace flux
 
-kubectl wait -n flux --for=condition=ready pod -l app=helm-operator
+kubectl wait -n flux --for=condition=ready pod -l app=helm-operator --timeout -1
 
 KEY_CONTENTS=$(kubectl -n flux logs deployment/flux | grep identity.pub | cut -d '"' -f2)
 
