@@ -24,6 +24,14 @@ Download [the latest release](https://github.com/helm/helm/releases/) and add it
 sudo snap install fluxctl
 ```
 
+### `istio`
+
+```shell
+mkdir -p ~/.local/lib && cd $_
+curl -L https://istio.io/downloadIstio | sh -
+ln -sf ~/.local/lib/istio-1.6.2/bin/istioctl ~/.local/bin/istioctl
+```
+
 ## Useful Tools
 
 ### `kube{ctx,ns}`
