@@ -13,6 +13,10 @@ Vagrant.configure("2") do |config|
     data.vm.box = "generic/alpine310"
     data.vm.hostname = "k3s-data"
     data.vm.network "private_network", ip: "#{DATA_IP}"#, name: "vboxnet0"
+    data.vm.provider "virtualbox" do |v|
+      v.memory = 1024
+      v.cpus = 1
+    end
     data.vm.provision "shell", path: "provision.sh"
     data.vm.provision "shell", inline: <<-SHELL
       apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing etcd
@@ -26,12 +30,16 @@ Vagrant.configure("2") do |config|
     main.vm.box = "hashicorp/bionic64"
     main.vm.hostname = "k3s-main"
     main.vm.network "private_network", ip: "#{MAIN_IP}"#, name: "vboxnet1"
+    main.vm.provider "virtualbox" do |v|
+      v.memory = 2048
+      v.cpus = 2
+    end
     main.vm.provision "shell", path: "provision.sh"
     main.vm.provision "shell", inline: <<-SHELL
       export K3S_DATASTORE_ENDPOINT="http://#{DATA_IP}:2379"
       export K3S_TOKEN="#{TOKEN}"
       export K3S_NODE_IP="#{MAIN_IP}"
-      export INSTALL_K3S_EXEC="--tls-san #{MAIN_IP} --datastore-endpoint $K3S_DATASTORE_ENDPOINT --node-ip $K3S_NODE_IP --token $K3S_TOKEN --write-kubeconfig /vagrant/kubeconfig --flannel-iface eth1 --node-taint k3s-controlplane=true:NoExecute"
+      export INSTALL_K3S_EXEC="--tls-san #{MAIN_IP} --datastore-endpoint $K3S_DATASTORE_ENDPOINT --node-ip $K3S_NODE_IP --token $K3S_TOKEN --with-node-id --write-kubeconfig /vagrant/kubeconfig --flannel-iface eth1 --node-taint k3s-controlplane=true:NoExecute"
       curl -sfL https://get.k3s.io | sh -
       sed -i -e 's/127\.0\.0\.1/#{MAIN_IP}/' /vagrant/kubeconfig
     SHELL
@@ -41,12 +49,16 @@ Vagrant.configure("2") do |config|
     server.vm.box = "hashicorp/bionic64"
     server.vm.hostname = "k3s-server"
     server.vm.network "private_network", ip: "#{SERVER_IP}"#, name: "vboxnet1"
+    server.vm.provider "virtualbox" do |v|
+      v.memory = 1024
+      v.cpus = 2
+    end
     server.vm.provision "shell", path: "provision.sh"
     server.vm.provision "shell", inline: <<-SHELL
       export K3S_DATASTORE_ENDPOINT="http://#{DATA_IP}:2379"
       export K3S_TOKEN="#{TOKEN}"
       export K3S_NODE_IP="#{SERVER_IP}"
-      export INSTALL_K3S_EXEC="--tls-san #{SERVER_IP} --datastore-endpoint $K3S_DATASTORE_ENDPOINT --node-ip $K3S_NODE_IP --token $K3S_TOKEN --flannel-iface eth1"
+      export INSTALL_K3S_EXEC="--tls-san #{SERVER_IP} --datastore-endpoint $K3S_DATASTORE_ENDPOINT --node-ip $K3S_NODE_IP --token $K3S_TOKEN --with-node-id --flannel-iface eth1"
       curl -sfL https://get.k3s.io | sh -
     SHELL
   end
@@ -55,12 +67,16 @@ Vagrant.configure("2") do |config|
     agent.vm.box = "hashicorp/bionic64"
     agent.vm.hostname = "k3s-agent"
     agent.vm.network "private_network", ip: "#{AGENT_IP}"#, name: "vboxnet2"
+    agent.vm.provider "virtualbox" do |v|
+      v.memory = 1024
+      v.cpus = 2
+    end
     agent.vm.provision "shell", path: "provision.sh"
     agent.vm.provision "shell", inline: <<-SHELL
       export K3S_TOKEN="#{TOKEN}"
       export K3S_URL="https://#{MAIN_IP}:6443"
       export K3S_NODE_IP="#{AGENT_IP}"
-      export INSTALL_K3S_EXEC="--token $K3S_TOKEN --server $K3S_URL --node-ip $K3S_NODE_IP --flannel-iface eth1"
+      export INSTALL_K3S_EXEC="--token $K3S_TOKEN --server $K3S_URL --node-ip $K3S_NODE_IP --with-node-id --flannel-iface eth1"
       curl -sfL https://get.k3s.io | sh -
     SHELL
   end
