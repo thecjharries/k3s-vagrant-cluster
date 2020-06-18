@@ -15,9 +15,6 @@ Vagrant.configure("2") do |config|
       INSTALL_K3S_EXEC="--write-kubeconfig /vagrant/kubeconfig"
       INSTALL_K3S_EXEC="$INSTALL_K3S_EXEC --write-kubeconfig-mode $K3S_KUBECONFIG_MODE"
       INSTALL_K3S_EXEC="$INSTALL_K3S_EXEC --tls-san $K3S_EXTERNAL_IP"
-      INSTALL_K3S_EXEC="$INSTALL_K3S_EXEC --kube-apiserver-arg service-node-port-range=1-65000"
-      INSTALL_K3S_EXEC="$INSTALL_K3S_EXEC --kube-apiserver-arg advertise-address=$K3S_EXTERNAL_IP"
-      INSTALL_K3S_EXEC="$INSTALL_K3S_EXEC --kube-apiserver-arg external-hostname=$K3S_EXTERNAL_IP"
       export INSTALL_K3S_EXEC="$INSTALL_K3S_EXEC"
       curl -sfL https://get.k3s.io | sh -
       rm -rf /vagrant/main-token
