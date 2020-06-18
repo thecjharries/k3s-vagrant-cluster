@@ -35,3 +35,7 @@ git clone https://github.com/ahmetb/kubectx.git .
 ln -sf ~/.local/lib/kubectx/kubectx ~/.local/bin/kubectx
 ln -sf ~/.local/lib/kubectx/kubens ~/.local/bin/kubens
 ```
+
+## Gnarly Bugs
+
+* [`flannel` screws up networking](https://github.com/rancher/k3s/issues/72)
