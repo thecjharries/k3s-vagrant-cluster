@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "data" do |data|
     data.vm.box = "generic/alpine310"
     data.vm.hostname = "k3s-data"
-    data.vm.network "private_network", ip: "#{DATA_IP}", name: "vboxnet0"
+    data.vm.network "private_network", ip: "#{DATA_IP}"#, name: "vboxnet0"
     data.vm.provision "shell", path: "provision.sh"
     data.vm.provision "shell", inline: <<-SHELL
       apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing etcd
@@ -25,7 +25,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "main" do |main|
     main.vm.box = "hashicorp/bionic64"
     main.vm.hostname = "k3s-main"
-    main.vm.network "private_network", ip: "#{MAIN_IP}", name: "vboxnet1"
+    main.vm.network "private_network", ip: "#{MAIN_IP}"#, name: "vboxnet1"
     main.vm.provision "shell", path: "provision.sh"
     main.vm.provision "shell", inline: <<-SHELL
       export K3S_DATASTORE_ENDPOINT="http://#{DATA_IP}:2379"
@@ -40,7 +40,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "server" do |server|
     server.vm.box = "hashicorp/bionic64"
     server.vm.hostname = "k3s-server"
-    server.vm.network "private_network", ip: "#{SERVER_IP}", name: "vboxnet1"
+    server.vm.network "private_network", ip: "#{SERVER_IP}"#, name: "vboxnet1"
     server.vm.provision "shell", path: "provision.sh"
     server.vm.provision "shell", inline: <<-SHELL
       export K3S_DATASTORE_ENDPOINT="http://#{DATA_IP}:2379"
@@ -54,7 +54,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "agent" do |agent|
     agent.vm.box = "hashicorp/bionic64"
     agent.vm.hostname = "k3s-agent"
-    agent.vm.network "private_network", ip: "#{AGENT_IP}", name: "vboxnet2"
+    agent.vm.network "private_network", ip: "#{AGENT_IP}"#, name: "vboxnet2"
     agent.vm.provision "shell", path: "provision.sh"
     agent.vm.provision "shell", inline: <<-SHELL
       export K3S_TOKEN="#{TOKEN}"
