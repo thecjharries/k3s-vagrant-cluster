@@ -30,7 +30,7 @@ Vagrant.configure("2") do |config|
       export K3S_DATASTORE_ENDPOINT="http://#{DATA_IP}:2379"
       export K3S_TOKEN="#{TOKEN}"
       export K3S_NODE_IP="#{MAIN_IP}"
-      export INSTALL_K3S_EXEC="--tls-san #{MAIN_IP} --datastore-endpoint $K3S_DATASTORE_ENDPOINT --node-ip $K3S_NODE_IP --token $K3S_TOKEN --write-kubeconfig /vagrant/kubeconfig --node-taint k3s-controlplane=true:NoExecute"
+      export INSTALL_K3S_EXEC="--tls-san #{MAIN_IP} --datastore-endpoint $K3S_DATASTORE_ENDPOINT --node-ip $K3S_NODE_IP --token $K3S_TOKEN --write-kubeconfig /vagrant/kubeconfig --flannel-iface eth1 --node-taint k3s-controlplane=true:NoExecute"
       curl -sfL https://get.k3s.io | sh -
       sed -i -e 's/127\.0\.0\.1/10.147.0.13/' /vagrant/kubeconfig
     SHELL
@@ -44,7 +44,7 @@ Vagrant.configure("2") do |config|
       export K3S_TOKEN="#{TOKEN}"
       export K3S_URL="https://#{MAIN_IP}:6443"
       export K3S_NODE_IP="#{NODE_IP}"
-      export INSTALL_K3S_EXEC="--token $K3S_TOKEN --server $K3S_URL --node-ip $K3S_NODE_IP"
+      export INSTALL_K3S_EXEC="--token $K3S_TOKEN --server $K3S_URL --node-ip $K3S_NODE_IP --flannel-iface eth1"
       curl -sfL https://get.k3s.io | sh -
     SHELL
   end
